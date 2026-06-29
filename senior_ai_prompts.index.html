@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>시니어 AI 프롬프트 모음집</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --text: #1a1a18;
+    --text-sub: #5c5c56;
+    --text-muted: #9a9a92;
+    --accent: #2563eb;
+    --accent-bg: #eff6ff;
+    --accent-text: #1d4ed8;
+    --border: rgba(0,0,0,0.09);
+    --border-mid: rgba(0,0,0,0.13);
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 1.1rem 0.85rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 0.85rem; }
+  .header-icon { font-size: 28px; line-height: 1; }
+  .header h1 { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.25; }
+  .header p { font-size: 13px; color: var(--text-muted); margin-top: 1px; }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-sub);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+  }
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ── Content ── */
+  .content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── Prompt Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 12px 14px 0;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    padding: 4px 14px 0;
+    line-height: 1.35;
+  }
+  .card-text {
+    font-size: 15px;
+    color: var(--text-sub);
+    padding: 8px 14px 12px;
+    line-height: 1.7;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  .card-text em {
+    color: var(--accent-text);
+    font-style: normal;
+    font-weight: 700;
+    background: var(--accent-bg);
+    border-radius: 4px;
+    padding: 0 3px;
+  }
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    background: #fafaf8;
+  }
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    border: 1px solid #bfdbfe;
+    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    cursor: pointer;
+    min-height: 40px;
+    min-width: 88px;
+    transition: background 0.12s, transform 0.1s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .copy-btn:active { transform: scale(0.97); background: #dbeafe; }
+  .copy-btn.copied {
+    color: var(--success);
+    background: var(--success-bg);
+    border-color: #bbf7d0;
+  }
+  .copy-icon { font-size: 17px; }
+
+  /* ── Tip ── */
+  .tip {
+    background: var(--accent-bg);
+    border: 1px solid #bfdbfe;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--accent-text);
+    line-height: 1.65;
+    word-break: keep-all;
+    margin-bottom: 1rem;
+  }
+  .tip strong { font-weight: 700; }
+
+  /* ── Category header ── */
+  .cat-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cat-header span { font-size: 16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-icon">🤖</div>
+    <div>
+      <h1>시니어 AI 프롬프트 모음집</h1>
+      <p>복사 버튼을 누르고 AI에 붙여넣으세요</p>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+const categories = [
+  { label: "🏥 건강·약", prompts: [
+    { title: "약 이름 설명", text: "내가 먹는 약 이름이 [약 이름]인데, 이 약이 뭐 하는 약인지 쉬운 말로 설명해줘." },
+    { title: "처방전 이해", text: "병원에서 처방전을 받았는데 무슨 뜻인지 모르겠어. 내용을 알려줄게: [처방전 내용]. 쉽게 풀어서 설명해줘." },
+    { title: "증상 확인", text: "요즘 [증상 예: 무릎이 쑤시고, 아침에 손이 붓는 느낌]이 있는데, 어떤 병일 수 있는지 알려줘. 병원은 어느 과를 가면 좋을지도 알려줘." },
+    { title: "건강검진 수치 해석", text: "건강검진 결과지에 [수치 예: 공복혈당 108, 중성지방 180]이 나왔는데, 이게 정상인지 아닌지 쉽게 설명해줘. 주의할 점도 알려줘." },
+    { title: "식이요법 문의", text: "내가 [당뇨 / 고혈압 / 고지혈증]이 있는데, 먹으면 좋은 음식과 피해야 할 음식을 표로 정리해줘. 쉽고 간단하게." },
+    { title: "운동 추천", text: "나는 [나이]살이고 [무릎이 안 좋아 / 허리 디스크가 있어]. 집에서 할 수 있는 가벼운 운동을 3가지만 추천해줘. 쉬운 말로." },
+    { title: "약 복용 시간 정리", text: "내가 먹는 약이 여러 가지야. 아침에 [약 이름들], 저녁에 [약 이름들]을 먹어. 언제 어떻게 먹으면 좋은지 표로 정리해줘." },
+    { title: "건강 뉴스 요약", text: "요즘 뉴스에서 [건강 키워드 예: 오메가3, 비타민D 결핍]이 자주 나오는데, 이게 어떤 건지 쉽게 설명하고 나한테 필요한지 알려줘." },
+    { title: "병원 예약 전화 준비", text: "[병원 이름]에 전화해서 진료 예약하려고 해. 어떻게 말해야 하는지 전화 대본을 써줘. 증상은 [증상]이야." },
+    { title: "의사 질문 목록", text: "다음 주에 [내과 / 정형외과] 진료를 받을 건데, 의사 선생님께 물어봐야 할 중요한 질문 목록을 만들어줘. 내 증상은 [증상]이야." }
+  ]},
+  { label: "👨‍👩‍👧 가족·소통", prompts: [
+    { title: "손녀 생일 축하 문자", text: "손녀/손자 [이름] 생일 축하 문자를 따뜻하고 짧게 써줘. 할머니/할아버지가 보내는 거야." },
+    { title: "감사 문자", text: "[자녀 이름]이/가 지난번에 [도움 내용]을 해줬어. 고마운 마음을 담은 문자를 써줘. 너무 딱딱하지 않게." },
+    { title: "경조사 문구", text: "[지인 이름]의 [결혼식 / 부모님 장례식]에 보낼 문자를 써줘. 진심이 담기도록 써줘." },
+    { title: "가족 단체방 글", text: "가족 단체 카톡방에 올릴 글을 써줘. 내용은 [예: 이번 추석에 다 같이 모이자는 내용]이야. 밝고 따뜻하게." },
+    { title: "손주와 대화 주제", text: "초등학교 [학년] 손자/손녀와 대화할 때 재미있는 주제나 질문 10가지만 알려줘. 요즘 아이들이 좋아하는 것 위주로." },
+    { title: "외국 가족 영어 문자", text: "미국에 있는 아들한테 영어로 문자를 보내고 싶어. 내용은 [예: 잘 지내냐, 밥은 먹냐, 보고 싶다]야. 쉬운 영어로 써줘." },
+    { title: "부모님 생신 선물 추천", text: "[나이]살 어머니/아버지 생신 선물을 추천해줘. 예산은 [금액]이야. 건강과 실용성을 생각해서." },
+    { title: "자녀에게 편지 쓰기", text: "[자녀 이름]에게 편지를 쓰고 싶어. 내가 하고 싶은 말은 [예: 고생 많다, 건강 챙겨라, 항상 응원한다]야. 진심 담아 편지 형식으로 써줘." },
+    { title: "갈등 상황 화해 문자", text: "[자녀 / 가족]과 [상황 예: 용돈 문제로] 서로 서운한 상황이야. 화해할 수 있는 따뜻한 문자를 써줘." },
+    { title: "명절 인사말", text: "[설날 / 추석] 인사말을 써줘. 지인들에게 단체로 보낼 거야. 따뜻하고 격식 있게." }
+  ]},
+  { label: "🏛️ 민원·행정", prompts: [
+    { title: "공문서 해석", text: "구청에서 온 공문인데 무슨 뜻인지 모르겠어. 내용을 알려줄게: [내용 붙여넣기]. 쉽게 풀어줘." },
+    { title: "복지 혜택 찾기", text: "나는 [나이]살이고 [기초연금 / 장애인 / 차상위계층]이야. 정부나 지자체에서 받을 수 있는 혜택을 알려줘." },
+    { title: "신청서 작성 도움", text: "[지원금 이름 / 프로그램 이름] 신청서를 써야 해. 어떤 내용을 적어야 하는지, 주의사항은 뭔지 알려줘." },
+    { title: "계약서 검토", text: "다음 계약서 내용을 보고 내가 주의해야 할 부분이 있는지 알려줘: [계약서 내용 일부]. 어려운 말은 쉽게 설명해줘." },
+    { title: "스미싱 문자 확인", text: "이런 문자가 왔는데 사기인지 아닌지 확인해줘: [문자 내용]. 이런 문자는 어떻게 대처해야 해?" },
+    { title: "건강보험 관련 문의", text: "건강보험에서 [예: 본인부담금 환급, 임플란트 보험 적용]에 대해 알고 싶어. 어떻게 신청하는지 쉽게 알려줘." },
+    { title: "세금 신고 준비", text: "종합소득세 / 재산세 신고를 해야 하는데 뭘 준비해야 하는지 순서대로 알려줘. 처음 하는 거야." },
+    { title: "민원 전화 대본", text: "[기관 이름]에 전화해서 [예: 등본 발급 방법 문의 / 민원 제기]하려고 해. 뭐라고 말하면 좋은지 대본을 써줘." },
+    { title: "부동산 용어 설명", text: "부동산 계약서에 [용어 예: 전세권 설정, 근저당, 확정일자]라고 나와 있는데 무슨 뜻인지 쉽게 설명해줘." },
+    { title: "연금 수령 확인", text: "국민연금을 [나이]부터 받을 수 있는지, 얼마나 받을 수 있는지 알아보는 방법을 알려줘." }
+  ]},
+  { label: "✈️ 여가·취미", prompts: [
+    { title: "국내 여행 계획", text: "[도시 이름]으로 2박 3일 여행을 가려고 해. 주요 명소, 맛집, 숙소를 포함한 일정표를 짜줘. 어르신도 걷기 편한 코스로." },
+    { title: "해외 여행 준비", text: "[나라 이름]으로 여행 가려고 해. 준비물, 주의사항, 환전 팁, 유용한 현지 앱을 알려줘." },
+    { title: "요리 레시피", text: "[재료 예: 두부, 애호박, 된장]으로 만들 수 있는 쉬운 요리 레시피를 알려줘. 칼로리도 알려줘." },
+    { title: "텃밭·원예", text: "베란다 텃밭에서 [채소 이름]을 키우고 싶어. 심는 시기, 물 주는 방법, 주의사항을 알려줘." },
+    { title: "독서 추천", text: "나는 [장르 예: 역사소설, 자기계발, 에세이]를 좋아해. 최근에 나온 좋은 책 5권 추천해줘. 줄거리도 짧게 알려줘." },
+    { title: "영화·드라마 추천", text: "최근에 [본 작품 이름]을 재미있게 봤어. 이런 스타일의 영화나 드라마를 5개 더 추천해줘." },
+    { title: "취미 배우기", text: "[취미 예: 수채화, 캘리그라피, 탁구]를 처음 시작하려고 해. 뭘 준비해야 하고 어디서 배울 수 있는지 알려줘." },
+    { title: "건강 산책 코스", text: "[지역 이름] 근처에서 어르신이 걷기 좋은 산책 코스나 공원을 알려줘. 난이도는 쉽게." },
+    { title: "손주와 주말 활동", text: "[나이]살 손자/손녀와 함께 할 수 있는 주말 활동 5가지 추천해줘. 집에서 할 수 있는 것과 밖에서 할 것 섞어서." },
+    { title: "노래 정보 찾기", text: "[가수 이름]의 [노래 제목]이 언제 나왔는지, 어떤 시대 배경인지 알려줘. 그 시절 추억도 떠올려줘." }
+  ]},
+  { label: "📰 정보·이해", prompts: [
+    { title: "뉴스 쉽게 설명", text: "오늘 뉴스에서 [뉴스 제목 또는 내용]을 봤는데, 이게 무슨 뜻인지 쉽게 설명해줘. 나한테 영향이 있는지도 알려줘." },
+    { title: "신조어 풀이", text: "요즘 젊은 사람들이 쓰는 말 중에 [단어 예: 갓생, 스불재, 레전드]이 무슨 뜻인지 알려줘." },
+    { title: "스마트폰 사용법", text: "스마트폰에서 [기능 예: 와이파이 연결, QR코드 찍기, 사진 저장]하는 방법을 순서대로 쉽게 알려줘. 삼성 갤럭시 기준으로." },
+    { title: "앱 사용 방법", text: "[앱 이름 예: 카카오페이, 네이버 지도, 쿠팡]을 처음 써보려고 해. 사용 방법을 단계별로 쉽게 알려줘." },
+    { title: "보이스피싱 예방", text: "요즘 어떤 종류의 전화 사기나 문자 사기가 많은지 알려줘. 피하는 방법도 알려줘." },
+    { title: "경제 용어 설명", text: "뉴스에서 [용어 예: 금리 인상, 환율, 물가 상승]이 나왔는데, 이게 내 생활이나 저축에 어떤 영향을 주는지 쉽게 설명해줘." },
+    { title: "역사·상식 궁금증", text: "[궁금한 역사 사건 예: 6.25 전쟁이 왜 일어났는지, 임진왜란의 원인]에 대해 핵심만 쉽게 설명해줘." },
+    { title: "날씨·재난 대비", text: "[태풍 / 폭염 / 한파]이 올 때 어르신이 특히 주의해야 할 것들을 알려줘. 대비 방법도 함께." },
+    { title: "카톡 정보 사실 확인", text: "카카오톡으로 [내용 예: 특정 음식이 암을 유발한다는 글]이 돌아다니는데, 이게 사실인지 확인해줘." },
+    { title: "유튜브 활용법", text: "유튜브에서 [주제 예: 건강 체조, 한국 역사, 요리]를 배우고 싶어. 어떻게 검색하면 좋은지, 믿을 만한 채널은 어떻게 찾는지 알려줘." }
+  ]},
+  { label: "🖼️ 이미지 작업", prompts: [
+    { title: "사진 설명해 줘", text: "이 사진을 보고 어떤 장면인지 자세하게 설명해줘. 사진 속에 뭐가 있는지, 어떤 상황인지 알려줘." },
+    { title: "사진 속 글자 읽기", text: "이 사진 속에 적혀 있는 글자를 전부 읽어서 텍스트로 옮겨줘. 영수증, 안내문, 약봉투 등 글자가 있으면 다 읽어줘." },
+    { title: "약봉투·처방전 사진 해석", text: "이 약봉투(또는 처방전) 사진을 보고, 어떤 약인지, 언제 몇 알 먹는지, 주의사항은 뭔지 쉽게 설명해줘." },
+    { title: "영수증·고지서 정리", text: "이 영수증(또는 고지서) 사진을 보고, 총 금액이 얼마인지, 주요 항목은 뭔지 표로 정리해줘." },
+    { title: "음식 사진 칼로리 확인", text: "이 음식 사진을 보고 어떤 음식인지 알려줘. 대략적인 칼로리도 알려줘. 당뇨나 혈압에 주의할 점도 알려줘." },
+    { title: "식물·꽃 이름 알아보기", text: "이 사진 속 식물(또는 꽃)이 뭔지 알려줘. 이름, 특징, 키우는 방법도 간단히 알려줘." },
+    { title: "외국어 간판·메뉴 번역", text: "이 사진 속 외국어로 된 글자를 한국어로 번역해줘. 식당 메뉴나 안내판이면 뭔지 설명도 해줘." },
+    { title: "서류 사진 요약", text: "이 서류 사진을 보고, 어떤 내용인지 핵심만 쉽게 요약해줘. 내가 주의해야 할 부분이 있으면 알려줘." },
+    { title: "사진으로 장소 찾기", text: "이 사진을 보고 어떤 장소인지, 어느 지역인지 알 수 있으면 알려줘. 유명한 곳이면 관련 정보도 알려줘." },
+    { title: "사진 속 제품 정보 확인", text: "이 사진 속 제품(약, 식품, 생활용품 등)이 뭔지 알려줘. 사용 방법이나 주의사항도 알려줘." }
+  ]},
+  { label: "📖 추억·글쓰기", prompts: [
+    { title: "자서전 쓰기", text: "내 인생을 글로 남기고 싶어. 내가 경험한 것을 알려줄게: [경험 내용]. 이걸 자서전 형식으로 잘 다듬어줘." },
+    { title: "일기 쓰기 도움", text: "오늘 있었던 일을 알려줄게: [오늘 있었던 일]. 이걸 일기 형식으로 감성 있게 써줘." },
+    { title: "옛 추억 글쓰기", text: "어릴 때 [추억 예: 시골에서 살던 시절, 6.25 이후 어렵던 시절] 이야기를 글로 쓰고 싶어. 내가 기억하는 내용: [내용]. 글로 다듬어줘." },
+    { title: "손주에게 남기는 편지", text: "손자/손녀에게 삶의 지혜를 담은 편지를 쓰고 싶어. 내가 전하고 싶은 말은 [내용]이야. 따뜻하고 진솔하게 써줘." },
+    { title: "명절 인사말", text: "[설날 / 추석] 인사말을 써줘. 지인들에게 단체로 보낼 거야. 따뜻하고 격식 있게." },
+    { title: "옛날 노래 정보", text: "[가수 이름 또는 노래 제목]이 언제 나왔는지, 어떤 시대 배경인지 알려줘. 그 시절 추억도 떠올려줘." },
+    { title: "동창 모임 공지문", text: "고등학교 동창 모임 공지문을 써줘. 일시: [날짜], 장소: [장소], 비용: [금액]. 옛 친구들이 꼭 오고 싶게 써줘." },
+    { title: "감사 일기 작성", text: "오늘 감사한 일 3가지를 알려줄게: [내용]. 이걸 감사 일기 형식으로 예쁘게 정리해줘." },
+    { title: "회고록 목차 만들기", text: "내 인생을 회고록으로 쓰고 싶어. 나는 [간단한 이력: 출생지, 직업, 주요 경험]이야. 회고록 목차를 만들어줘." },
+    { title: "글 다듬기", text: "내가 쓴 글을 다듬어줘. 문법이나 어색한 부분만 고쳐줘. 내 말투는 최대한 살려줘: [글 내용]" }
+  ]}
+];
+
+let activeIdx = 0;
+
+function escapeHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function highlightBrackets(text) {
+  return escapeHtml(text).replace(/\[([^\]]+)\]/g, '<em>[$1]</em>');
+}
+
+function renderTabs() {
+  const el = document.getElementById('tabs');
+  el.innerHTML = categories.map((c, i) =>
+    `<button class="tab${i===activeIdx?' active':''}" onclick="switchTab(${i})">${c.label}</button>`
+  ).join('');
+}
+
+// 프롬프트 텍스트를 index로 조회하기 위한 맵
+const promptMap = {};
+
+function renderContent() {
+  const el = document.getElementById('content');
+  const cat = categories[activeIdx];
+  let html = `<div class="cat-header"><span>${cat.label.split(' ')[0]}</span>${cat.label.split(' ').slice(1).join(' ')} 프롬프트</div>`;
+  html += cat.prompts.map((p, i) => {
+    const key = `${activeIdx}-${i}`;
+    promptMap[key] = p.text;
+    return `
+    <div class="card">
+      <div class="card-label">프롬프트 ${i+1}</div>
+      <div class="card-title">${escapeHtml(p.title)}</div>
+      <div class="card-text">${highlightBrackets(p.text)}</div>
+      <div class="card-footer">
+        <button class="copy-btn" id="btn-${i}" data-key="${key}">
+          <span class="copy-icon">📋</span> 복사하기
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+  html += `
+    <div class="tip">
+      💡 <strong>사용 방법</strong><br>
+      파란색 <strong>[괄호]</strong> 부분만 본인 상황에 맞게 바꾸세요.<br>
+      복사 후 Claude나 ChatGPT에 그대로 붙여넣으면 됩니다.
+    </div>
+  `;
+  el.innerHTML = html;
+}
+
+function switchTab(i) {
+  activeIdx = i;
+  renderTabs();
+  renderContent();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 이벤트 위임: document에 등록해서 innerHTML 교체 후에도 살아남음
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  const key = btn.dataset.key;
+  const text = promptMap[key];
+  if (!text) return;
+  doCopyText(btn, text);
+});
+
+function doCopyText(btn, text) {
+  const succeed = () => {
+    btn.innerHTML = '<span class="copy-icon">✅</span> 복사됨!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '<span class="copy-icon">📋</span> 복사하기';
+      btn.classList.remove('copied');
+    }, 2000);
+  };
+
+  // 1순위: Clipboard API (HTTPS 또는 localhost)
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(succeed).catch(() => legacyCopy(text, succeed));
+    return;
+  }
+  // 2순위: execCommand fallback (HTTP, 구형 안드로이드, 파일 로컬)
+  legacyCopy(text, succeed);
+}
+
+function legacyCopy(text, callback) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+  document.body.appendChild(ta);
+  // iOS Safari: setSelectionRange 필요
+  ta.focus();
+  ta.setSelectionRange(0, text.length);
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  if (ok) { callback(); }
+  else { alert('복사가 지원되지 않는 브라우저입니다.\n텍스트를 길게 눌러 직접 복사해 주세요.'); }
+}
+
+renderTabs();
+renderContent();
+</script>
+</body>
+</html>
